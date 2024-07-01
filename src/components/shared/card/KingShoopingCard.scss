@@ -1,0 +1,38 @@
+.card {
+	height: 28rem;
+	width: 20rem;
+	display: grid;
+	grid-template-rows: 40% 60%;
+	padding: 0.5rem;
+	align-content: space-between;
+}
+.card-image {
+	height: 100%;
+}
+.card-body {
+	display: grid;
+	grid-template-rows: 20% 40% 15% 20%;
+	gap: 0.5rem;
+}
+
+.card-buttons {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	gap: 1rem;
+}
+
+.card-numeric-info {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	width: 100%;
+}
+
+.card-price {
+	font-weight: 500;
+}
+
+.card-rating {
+	align-content: center;
+}

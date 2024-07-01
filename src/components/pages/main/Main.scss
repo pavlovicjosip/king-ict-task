@@ -1,0 +1,24 @@
+@import '~bootstrap/scss/bootstrap';
+
+.main-wrapper {
+	height: 100vh;
+	display: grid;
+	grid-template-rows: 10% 87% 3%;
+}
+
+.content {
+	margin-left: 1rem;
+	margin-right: 1rem;
+}
+
+.footer {
+	position: relative;
+	display: flex;
+	justify-content: center;
+	border-top: 1px solid rgb(179, 179, 179);
+
+	p {
+		position: absolute;
+		top: 20%;
+	}
+}
