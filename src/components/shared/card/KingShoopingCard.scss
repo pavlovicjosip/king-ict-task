@@ -1,5 +1,5 @@
 .card {
-	height: 28rem;
+	height: 35rem;
 	width: 20rem;
 	display: grid;
 	grid-template-rows: 40% 60%;
@@ -11,7 +11,7 @@
 }
 .card-body {
 	display: grid;
-	grid-template-rows: 20% 40% 15% 20%;
+	grid-template-rows: 15% 30% 10% 20% 15%;
 	gap: 0.5rem;
 }
 

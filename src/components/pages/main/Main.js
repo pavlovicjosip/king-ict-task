@@ -6,13 +6,13 @@ import { useAuth } from '../../services/AuthContext';
 
 import Shop from '../../features/shop/Shop';
 import Navigation from '../../features/navigation/Navigation';
-import Login from '../../features/login/Login';
+
 import Cart from '../../features/cart/Cart';
 import Profile from '../../features/profile/Profile';
 
 const Main = () => {
 	const { user, logout } = useAuth();
-	const [nav, setNav] = useState(null);
+	const [nav, setNav] = useState(1);
 
 	return (
 		<Container>
@@ -21,7 +21,6 @@ const Main = () => {
 					{user && (
 						<Navigation
 							handleNavClick={(nav) => {
-								console.log(nav);
 								setNav(nav);
 							}}
 						/>

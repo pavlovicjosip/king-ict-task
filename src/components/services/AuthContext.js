@@ -1,12 +1,34 @@
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useState, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [cart, setCart] = useState([]);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+
+
+  useEffect(() => {
+    // Load cart from local storage when user logs in
+    if (user) {
+      const storedCart = localStorage.getItem(`cart_${user.username}`);
+      if (storedCart) {
+        setCart(JSON.parse(storedCart));
+      }
+    }
+  }, [user]);
+
+  useEffect(() => {
+    // Save cart to local storage when cart changes
+    if (user) {
+      localStorage.setItem(`cart_${user.username}`, JSON.stringify(cart));
+    }
+  }, [cart, user]);
+
+
+
 
   const login = async (username, password) => {
     try {
@@ -34,11 +56,29 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => {
     setUser(null);
+    setCart([]);
     navigate('/login'); // Redirect to login page after logout
   };
 
+
+  const addToCart = (item, quantity) => {
+    setCart((prevCart) => {
+      const existingItem = prevCart.find((cartItem) => cartItem.id === item.id);
+      if (existingItem) {
+        return prevCart.map((cartItem) =>
+          cartItem.id === item.id
+            ? { ...cartItem, quantity: cartItem.quantity + quantity }
+            : cartItem
+        );
+      } else {
+        return [...prevCart, { ...item, quantity }];
+      }
+    });
+  };
+
+
   return (
-    <AuthContext.Provider value={{ user, login, logout, error }}>
+    <AuthContext.Provider value={{ user, login, logout, addToCart,cart, error }}>
       {children}
     </AuthContext.Provider>
   );

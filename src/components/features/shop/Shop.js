@@ -6,6 +6,8 @@ import KingShoopingCard from '../../shared/card/KingShoopingCard';
 import KingInput from '../../shared/input/Input';
 import PriceFilter from '../priceFilter/PriceFilter';
 import KingDropdown from '../../shared/dropdown/Dropdown';
+import CategoryFilter from '../categoryFilter/CategoryFilter';
+import KingPagination from '../../shared/pagination/Pagination';
 
 const Shop = () => {
 	// const [inputValue, setInputValue] = useState('');
@@ -13,29 +15,33 @@ const Shop = () => {
 	const [filteredProducts, setFilteredProducts] = useState([]);
 	const [titleFilter, setTitleFilter] = useState('');
 	const [selectedPrice, setSelectedPrice] = useState('');
+	const [selectedCategories, setSelectedCategories] = useState([]);
+	const [categories, setCategories] = useState([]);
 	const [data, setData] = useState(null);
+	const [productsMetaData, setProductsMetaData] = useState(null);
 	const [loading, setLoading] = useState(true);
 	const [sortOption, setSortOption] = useState('');
 
 	const [error, setError] = useState('');
 
 	const sortOptions = [
-		{ label: 'Sortiraj po cijeni (uzlazno)', value: 'price-ascending' },
-		{ label: 'Sortiraj po cijeni (silazno)', value: 'price-descending' },
-		{ label: 'Sortiraj po naslovu (A-Z)', value: 'title-ascending' },
-		{ label: 'Sortiraj po naslovu (Z-A)', value: 'title-descending' },
+		{ label: 'cijena (uzlazno)', value: 'price-ascending' },
+		{ label: 'cijena (silazno)', value: 'price-descending' },
+		{ label: 'naslov (A-Z)', value: 'title-ascending' },
+		{ label: 'naslov (Z-A)', value: 'title-descending' },
 	];
 
 	// Data fetching
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
-				const response = await fetch('https://dummyjson.com/products');
+				const response = await fetch('https://dummyjson.com/products?limit=20');
 				if (!response.ok) {
 					throw new Error('Network response was not ok');
 				}
 				const result = await response.json();
 				setData(result.products);
+				setProductsMetaData({ limit: result.limit, skip: result.skip, total: result.total });
 				setFilteredProducts(data);
 			} catch (error) {
 				setError(error);
@@ -44,6 +50,20 @@ const Shop = () => {
 			}
 		};
 
+		const fetchCategories = async () => {
+			try {
+				const response = await fetch('https://dummyjson.com/products/category-list');
+				if (!response.ok) {
+					throw new Error('Network response was not ok');
+				}
+				const result = await response.json();
+				setCategories(result);
+			} catch (error) {
+				setError(error);
+			}
+		};
+
+		fetchCategories();
 		fetchData();
 	}, []);
 
@@ -59,6 +79,12 @@ const Shop = () => {
 					return itemPrice >= min && itemPrice <= max;
 				}
 				return itemPrice > min;
+			});
+		}
+
+		if (selectedCategories.length !== 0) {
+			filtered = filtered.filter((item) => {
+				return selectedCategories.includes(item.category);
 			});
 		}
 
@@ -82,7 +108,7 @@ const Shop = () => {
 		}
 
 		setFilteredProducts(filtered);
-	}, [selectedPrice, titleFilter, sortOption, data]);
+	}, [selectedPrice, selectedCategories, titleFilter, sortOption, data]);
 
 	const handleSortChange = (event) => {
 		setSortOption(event.target.value);
@@ -119,6 +145,39 @@ const Shop = () => {
 		setSelectedPrice(value);
 	};
 
+	const handleCategoryChange = (value) => {
+		const selCategories = [...selectedCategories];
+		if (selCategories.includes(value)) {
+			const index = selCategories.indexOf(value);
+			selCategories.splice(index, 1);
+		} else {
+			selCategories.push(value);
+		}
+		setSelectedCategories(selCategories);
+	};
+
+	const handlePageChange = (value) => {
+		console.log(value);
+		const fetchDataWithPagination = async () => {
+			try {
+				const response = await fetch('https://dummyjson.com/products?limit=20&skip=' + (value - 1) * 20);
+				if (!response.ok) {
+					throw new Error('Network response was not ok');
+				}
+				const result = await response.json();
+				setData(result.products);
+				setProductsMetaData({ limit: result.limit, skip: result?.skip, total: result.total });
+				setFilteredProducts(data);
+			} catch (error) {
+				setError(error);
+			} finally {
+				setLoading(false);
+			}
+		};
+
+		fetchDataWithPagination();
+	};
+
 	if (loading) return <div>Loading...</div>;
 	if (error) return <div>Error: {error.message}</div>;
 
@@ -133,17 +192,44 @@ const Shop = () => {
 						onChange={handleTitleFilterChange}
 						errorMessage={error}
 					></KingInput>
-					<PriceFilter selectedPrices={selectedPrice} onPriceChange={handlePriceChange} />
-					<KingDropdown label="Sort Items" options={sortOptions} value={sortOption} onChange={handleSortChange} />
+					<div className="control">
+						<span>Cijena</span>
+						<PriceFilter selectedPrices={selectedPrice} onPriceChange={handlePriceChange} />
+					</div>
+					<div className="control">
+						<span>Kategorije</span>
+						<CategoryFilter
+							categories={categories}
+							selectedCategories={selectedCategories}
+							onCategoryChange={handleCategoryChange}
+						/>
+					</div>
+
+					<KingDropdown
+						className="sort-control"
+						label="Sortiraj"
+						options={sortOptions}
+						value={sortOption}
+						onChange={handleSortChange}
+					/>
 				</div>
 			</form>
 
 			<div className="shop-data">
-				{filteredProducts?.map((product, index) => (
-					<Col key={index} md={6} lg={4} className="mb-4">
-						<KingShoopingCard product={product} onAddToBasket={handleAddToBasket}></KingShoopingCard>
-					</Col>
-				))}
+				<div className="shop-cards">
+					{filteredProducts?.map((product, index) => (
+						<Col key={index} md={6} lg={4} className="mb-4">
+							<KingShoopingCard product={product} onAddToBasket={handleAddToBasket}></KingShoopingCard>
+						</Col>
+					))}
+				</div>
+				<div className="shop-pagination">
+					<KingPagination
+						currentPage={Math.floor(productsMetaData.skip / 20) + 1}
+						onPageChange={handlePageChange}
+						totalPages={productsMetaData.total / 20}
+					></KingPagination>
+				</div>
 			</div>
 		</div>
 	);

@@ -1,3 +1,4 @@
+import './Login.scss';
 import React, { useState } from 'react';
 import { Form, Button, Container, Row, Col, Alert } from 'react-bootstrap';
 import { useAuth } from '../../services/AuthContext';
@@ -13,12 +14,12 @@ const Login = () => {
 	};
 
 	return (
-		<Container>
-			<Row className="justify-content-md-center">
-				<Col md={6}>
-					<h1>Login</h1>
+		<Container className="login-window">
+			<Row className="login">
+				<Col md={4}>
+					<h1>Prijava korisnika</h1>
 					{error && <Alert variant="danger">{error}</Alert>}
-					<Form onSubmit={handleSubmit}>
+					<Form onSubmit={handleSubmit} className="login-form">
 						<Form.Group controlId="formUsername">
 							<Form.Label>Korisničko ime</Form.Label>
 							<Form.Control
@@ -39,7 +40,7 @@ const Login = () => {
 							/>
 						</Form.Group>
 
-						<Button variant="primary" type="submit">
+						<Button variant="danger" type="submit">
 							Prijava
 						</Button>
 					</Form>

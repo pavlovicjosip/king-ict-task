@@ -1,8 +1,8 @@
 import Button from 'react-bootstrap/Button';
 
-export function KingButton() {
+export function KingButton(handleSubmit, variant) {
 	return (
-		<Button as="a" variant="primary">
+		<Button as="a" variant={variant} handleSubmit={() => handleSubmit()}>
 			Button as lin
 		</Button>
 	);

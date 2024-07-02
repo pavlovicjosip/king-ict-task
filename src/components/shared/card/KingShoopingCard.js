@@ -1,14 +1,17 @@
 import './KingShoopingCard.scss';
 
 import React, { useState } from 'react';
-import { Card, Button, Badge } from 'react-bootstrap';
+import { Card, Button, Badge, InputGroup, FormControl } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBasketShopping, faStar } from '@fortawesome/free-solid-svg-icons';
 import KingModal from '../modal/Modal';
+import { useAuth } from '../../services/AuthContext';
 
 const KingShoopingCard = ({ product, onAddToBasket }) => {
 	const [quantity, setQuantity] = useState(1);
+	const { addToCart } = useAuth();
 	const [modalShow, setModalShow] = useState(false);
+
 	const [modalContent, setModalContent] = useState({});
 
 	const handleShowModal = (item) => {
@@ -20,8 +23,8 @@ const KingShoopingCard = ({ product, onAddToBasket }) => {
 		setQuantity(Number(e.target.value));
 	};
 
-	const handleAddToBasket = () => {
-		onAddToBasket(quantity);
+	const handleAddToCart = () => {
+		addToCart(product, quantity);
 	};
 
 	const getRatingColor = (rating) => {
@@ -54,7 +57,7 @@ const KingShoopingCard = ({ product, onAddToBasket }) => {
 						</Badge>
 						<Card.Text className="card-price">{'$' + product.price}</Card.Text>
 					</div>
-					{/* <InputGroup className="mb-3">
+					<InputGroup className="mb-3">
 						<Button variant="outline-secondary" onClick={() => setQuantity(quantity > 1 ? quantity - 1 : 1)}>
 							-
 						</Button>
@@ -62,12 +65,12 @@ const KingShoopingCard = ({ product, onAddToBasket }) => {
 						<Button variant="outline-secondary" onClick={() => setQuantity(quantity + 1)}>
 							+
 						</Button>
-					</InputGroup> */}
+					</InputGroup>
 					<div className="card-buttons">
-						<Button variant="secondary" onClick={() => handleShowModal(product)}>
-							Prikaži detalje
+						<Button variant="outline-info" onClick={() => handleShowModal(product)}>
+							Detalji
 						</Button>
-						<Button variant="danger" onClick={handleAddToBasket}>
+						<Button variant="danger" onClick={handleAddToCart}>
 							<FontAwesomeIcon color="white" icon={faBasketShopping} />
 						</Button>
 					</div>
