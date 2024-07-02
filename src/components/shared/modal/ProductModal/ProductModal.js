@@ -1,14 +1,14 @@
 import React from 'react';
 import { Modal, Button } from 'react-bootstrap';
 
-const KingModal = ({ title, description, image, show, handleClose }) => {
+const KingProductModal = ({ title, description, image, show, handleClose }) => {
 	return (
-		<Modal show={show} onHide={handleClose}>
+		<Modal centered show={show} onHide={handleClose}>
 			<Modal.Header closeButton>
 				<Modal.Title>{title}</Modal.Title>
 			</Modal.Header>
 			<Modal.Body>
-				<img src={image} alt={title} className="img-fluid mb-3" />
+				<img src={image} alt={title} className="img-fluid " />
 				<p>{description}</p>
 			</Modal.Body>
 			<Modal.Footer>
@@ -20,4 +20,4 @@ const KingModal = ({ title, description, image, show, handleClose }) => {
 	);
 };
 
-export default KingModal;
+export default KingProductModal;

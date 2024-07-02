@@ -1,0 +1,17 @@
+.pagination .page-link {
+	color: rgba(255, 0, 0, 0.8);
+}
+
+.pagination .page-item.active .page-link {
+	background-color: rgba(255, 0, 0, 0.8);
+	border-color: rgba(255, 0, 0, 0.8);
+	color: white;
+}
+
+.pagination .page-link:hover {
+	color: darkred;
+}
+
+.pagination .page-item.disabled .page-link {
+	color: #ddd;
+}

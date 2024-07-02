@@ -1,0 +1,41 @@
+.cart-total {
+	padding: 1rem;
+	border-bottom: 1px solid grey;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+}
+
+.cart {
+	display: grid;
+	grid-template-columns: 1fr 10% 5%;
+	align-items: center;
+}
+
+.cart-remove {
+	width: 2rem;
+	height: 2rem;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.cart-price {
+	display: flex;
+
+	margin-top: 0.2rem;
+}
+
+.cart-quantity {
+	width: 10rem;
+}
+
+.cart-quantity-price {
+	display: flex;
+	flex-direction: row;
+	gap: 1rem;
+}
+
+.cart-buy{
+	width: 7rem;
+}

@@ -1,15 +1,15 @@
-import './KingShoopingCard.scss';
+import './ShoopingCard.scss';
 
 import React, { useState } from 'react';
-import { Card, Button, Badge, InputGroup, FormControl } from 'react-bootstrap';
+import { Card, Button, Badge } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBasketShopping, faStar } from '@fortawesome/free-solid-svg-icons';
-import KingModal from '../modal/Modal';
-import { useAuth } from '../../services/AuthContext';
+
+import KingQuantityInput from '../input/quantityInput/QuantityInput';
+import KingProductModal from '../modal/ProductModal/ProductModal';
 
 const KingShoopingCard = ({ product, onAddToBasket }) => {
 	const [quantity, setQuantity] = useState(1);
-	const { addToCart } = useAuth();
 	const [modalShow, setModalShow] = useState(false);
 
 	const [modalContent, setModalContent] = useState({});
@@ -19,12 +19,12 @@ const KingShoopingCard = ({ product, onAddToBasket }) => {
 		setModalShow(true);
 	};
 
-	const handleQuantityChange = (e) => {
-		setQuantity(Number(e.target.value));
+	const handleUpdateQuantity = (quantity) => {
+		setQuantity(quantity);
 	};
 
 	const handleAddToCart = () => {
-		addToCart(product, quantity);
+		onAddToBasket(product, quantity);
 	};
 
 	const getRatingColor = (rating) => {
@@ -57,17 +57,9 @@ const KingShoopingCard = ({ product, onAddToBasket }) => {
 						</Badge>
 						<Card.Text className="card-price">{'$' + product.price}</Card.Text>
 					</div>
-					<InputGroup className="mb-3">
-						<Button variant="outline-secondary" onClick={() => setQuantity(quantity > 1 ? quantity - 1 : 1)}>
-							-
-						</Button>
-						<FormControl type="number" value={quantity} onChange={handleQuantityChange} min="1" />
-						<Button variant="outline-secondary" onClick={() => setQuantity(quantity + 1)}>
-							+
-						</Button>
-					</InputGroup>
+					<KingQuantityInput onQuantityChange={(quantity) => handleUpdateQuantity(quantity)} />
 					<div className="card-buttons">
-						<Button variant="outline-info" onClick={() => handleShowModal(product)}>
+						<Button variant="outline-secondary" onClick={() => handleShowModal(product)}>
 							Detalji
 						</Button>
 						<Button variant="danger" onClick={handleAddToCart}>
@@ -76,7 +68,7 @@ const KingShoopingCard = ({ product, onAddToBasket }) => {
 					</div>
 				</Card.Body>
 			</Card>
-			<KingModal
+			<KingProductModal
 				show={modalShow}
 				handleClose={() => setModalShow(false)}
 				title={product.title}

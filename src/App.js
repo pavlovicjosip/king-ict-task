@@ -5,10 +5,11 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './components/services/AuthContext';
 import ProtectedRoute from './components/services/ProtectedRoute';
 import Main from './components/pages/main/Main';
-import Login from './components/features/login/Login';
-import Profile from './components/features/profile/Profile';
 
-import Cart from './components/features/cart/Cart';
+
+import Cart from './components/pages/cart/Cart';
+import Profile from './components/pages/profile/Profile';
+import Login from './components/pages/login/Login';
 
 function App() {
 	return (
@@ -16,14 +17,7 @@ function App() {
 			<AuthProvider>
 				<Routes>
 					<Route path="/login" element={<Login />} />
-					<Route
-						path="/"
-						element={
-							<ProtectedRoute>
-								<Main />
-							</ProtectedRoute>
-						}
-					/>
+					<Route path="/" element={<Main />} />
 					<Route
 						path="/profile"
 						element={

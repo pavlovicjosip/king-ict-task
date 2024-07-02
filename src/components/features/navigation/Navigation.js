@@ -4,7 +4,8 @@ import logo from '../../../assets/logos/logo.png';
 import React from 'react';
 
 import { useAuth } from '../../services/AuthContext';
-import { Button, Container, Nav, NavLink, Navbar } from 'react-bootstrap';
+import { Button, Container, Nav, Navbar } from 'react-bootstrap';
+import { NavLink } from 'react-router-dom';
 
 const Navigation = ({ handleNavClick }) => {
 	const { user, logout } = useAuth();
@@ -20,7 +21,7 @@ const Navigation = ({ handleNavClick }) => {
 				<Navbar.Collapse>
 					<Nav className="me-auto">
 						<Nav.Link onClick={() => handleNavClick(1)}>Trgovina</Nav.Link>
-						<Nav.Link onClick={() => handleNavClick(2)}>Profil</Nav.Link>
+						{user ? <Nav.Link onClick={() => handleNavClick(2)}>Profil</Nav.Link> : null}
 						<Nav.Link onClick={() => handleNavClick(3)}>Košarica</Nav.Link>
 					</Nav>
 					<Nav>

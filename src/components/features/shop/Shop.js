@@ -1,28 +1,39 @@
-import { Col } from 'react-bootstrap';
+import { Button, Col } from 'react-bootstrap';
 import './Shop.scss';
 
 import React, { useEffect, useState } from 'react';
-import KingShoopingCard from '../../shared/card/KingShoopingCard';
+import KingShoopingCard from '../../shared/card/ShoopingCard';
 import KingInput from '../../shared/input/Input';
 import PriceFilter from '../priceFilter/PriceFilter';
 import KingDropdown from '../../shared/dropdown/Dropdown';
 import CategoryFilter from '../categoryFilter/CategoryFilter';
 import KingPagination from '../../shared/pagination/Pagination';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTableList } from '@fortawesome/free-solid-svg-icons';
+import KingSimpleModal from '../../shared/modal/simpleModal/SimpleModal';
+import { useAuth } from '../../services/AuthContext';
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from 'react-toastify';
 
 const Shop = () => {
-	// const [inputValue, setInputValue] = useState('');
-	// const [sliderValue, setSliderValue] = useState(50);
-	const [filteredProducts, setFilteredProducts] = useState([]);
-	const [titleFilter, setTitleFilter] = useState('');
-	const [selectedPrice, setSelectedPrice] = useState('');
-	const [selectedCategories, setSelectedCategories] = useState([]);
-	const [categories, setCategories] = useState([]);
 	const [data, setData] = useState(null);
 	const [productsMetaData, setProductsMetaData] = useState(null);
-	const [loading, setLoading] = useState(true);
+	const [filteredProducts, setFilteredProducts] = useState([]);
+
+	const [titleFilter, setTitleFilter] = useState('');
+	const [selectedPrice, setSelectedPrice] = useState('');
+	const [categories, setCategories] = useState([]);
+	const [selectedCategories, setSelectedCategories] = useState([]);
 	const [sortOption, setSortOption] = useState('');
 
+	const [filterModalShow, setFilterModalShow] = useState(false);
+
+	const [currentPage, setCurrentPage] = useState(1);
+
+	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState('');
+
+	const { addToCart } = useAuth();
 
 	const sortOptions = [
 		{ label: 'cijena (uzlazno)', value: 'price-ascending' },
@@ -35,7 +46,7 @@ const Shop = () => {
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
-				const response = await fetch('https://dummyjson.com/products?limit=20');
+				const response = await fetch('https://dummyjson.com/products?limit=0');
 				if (!response.ok) {
 					throw new Error('Network response was not ok');
 				}
@@ -95,9 +106,9 @@ const Shop = () => {
 		if (sortOption !== '') {
 			filtered = filtered.sort((a, b) => {
 				if (sortOption === 'price-ascending') {
-					return a.price - b.price;
-				} else if (sortOption === 'price-descending') {
 					return b.price - a.price;
+				} else if (sortOption === 'price-descending') {
+					return a.price - b.price;
 				} else if (sortOption === 'title-ascending') {
 					return a.title.localeCompare(b.title);
 				} else if (sortOption === 'title-descending') {
@@ -118,28 +129,10 @@ const Shop = () => {
 		setTitleFilter(event.target.value);
 	};
 
-	const handleAddToBasket = (quantity) => {
-		alert(`Added ${quantity} item(s) to the basket`);
+	const handleAddToBasket = (product, quantity) => {
+		toast.success(`Proizvod ${product.title} je dodan u košaricu!`);
+		addToCart(product, quantity);
 	};
-
-	// const handleSearchChange = (e) => {
-	// 	setInputValue(e.target.value);
-	// 	setError(''); // Reset error message on change
-	// };
-
-	// const handleSliderChange = (e) => {
-	// 	setSliderValue(e.target.value);
-	// 	setError(''); // Reset error message on change
-	// };
-
-	// const handleSubmit = (e) => {
-	// 	e.preventDefault();
-	// 	if (!inputValue) {
-	// 		setError('This field is required.');
-	// 	} else {
-	// 		alert('Form submitted!');
-	// 	}
-	// };
 
 	const handlePriceChange = (value) => {
 		setSelectedPrice(value);
@@ -156,33 +149,45 @@ const Shop = () => {
 		setSelectedCategories(selCategories);
 	};
 
-	const handlePageChange = (value) => {
-		console.log(value);
-		const fetchDataWithPagination = async () => {
-			try {
-				const response = await fetch('https://dummyjson.com/products?limit=20&skip=' + (value - 1) * 20);
-				if (!response.ok) {
-					throw new Error('Network response was not ok');
-				}
-				const result = await response.json();
-				setData(result.products);
-				setProductsMetaData({ limit: result.limit, skip: result?.skip, total: result.total });
-				setFilteredProducts(data);
-			} catch (error) {
-				setError(error);
-			} finally {
-				setLoading(false);
-			}
-		};
-
-		fetchDataWithPagination();
+	const handlePageChange = (pageNumber) => {
+		setCurrentPage(pageNumber);
 	};
+
+	// INFO: If the next page data has to be fetched from the backend instead of handling it from memory, we can do it like this:
+
+	// const handlePageChange = (value) => {
+	// 	const fetchDataWithPagination = async () => {
+	// 		try {
+	// 			const response = await fetch('https://dummyjson.com/products?limit=20&skip=' + (value - 1) * 20);
+	// 			if (!response.ok) {
+	// 				throw new Error('Network response was not ok');
+	// 			}
+	// 			const result = await response.json();
+	// 			setData(result.products);
+	// 			setProductsMetaData({ limit: result.limit, skip: result?.skip, total: result.total });
+	// 			setFilteredProducts(data);
+	// 		} catch (error) {
+	// 			setError(error);
+	// 		} finally {
+	// 			setLoading(false);
+	// 		}
+	// 	};
+
+	// 	fetchDataWithPagination();
+	// };
+
+	const itemsPerPage = 20;
+	const totalPages = Math.ceil(filteredProducts?.length / itemsPerPage);
+	const currentItems = filteredProducts?.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
+	const handleFilterModalClose = () => setFilterModalShow(false);
+	const handleFilterModalShow = () => setFilterModalShow(true);
 
 	if (loading) return <div>Loading...</div>;
 	if (error) return <div>Error: {error.message}</div>;
 
-	return (
-		<div className="shop">
+	const shopControls = () => {
+		return (
 			<form>
 				<div className="shop-controls">
 					<KingInput
@@ -214,10 +219,18 @@ const Shop = () => {
 					/>
 				</div>
 			</form>
+		);
+	};
 
+	return (
+		<div className="shop">
+			<div className="shop-controls-wrapper">{shopControls()}</div>
 			<div className="shop-data">
+				<Button className="shop-controls-button " variant="outline-secondary" onClick={handleFilterModalShow}>
+					Filteri <FontAwesomeIcon icon={faTableList} />
+				</Button>
 				<div className="shop-cards">
-					{filteredProducts?.map((product, index) => (
+					{currentItems?.map((product, index) => (
 						<Col key={index} md={6} lg={4} className="mb-4">
 							<KingShoopingCard product={product} onAddToBasket={handleAddToBasket}></KingShoopingCard>
 						</Col>
@@ -225,12 +238,16 @@ const Shop = () => {
 				</div>
 				<div className="shop-pagination">
 					<KingPagination
-						currentPage={Math.floor(productsMetaData.skip / 20) + 1}
+						currentPage={currentPage}
 						onPageChange={handlePageChange}
-						totalPages={productsMetaData.total / 20}
+						totalPages={totalPages}
 					></KingPagination>
 				</div>
 			</div>
+			<KingSimpleModal handleClose={handleFilterModalClose} show={filterModalShow}>
+				{shopControls()}
+			</KingSimpleModal>
+			<ToastContainer />
 		</div>
 	);
 };
