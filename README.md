@@ -1,18 +1,23 @@
-# Getting Started with Create React App
+# Zadatak za posao Frontend Developera @KingICT 2024.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Projekt je kreiran pomoću Create React App (https://github.com/facebook/create-react-app).
 
-## Available Scripts
+## Skripte
 
-In the project directory, you can run:
+Za pokretanje aplikacije potrebno je pokrenuti `npm run start`
 
-### `npm start`
+## Dokumentacija
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Arhitektura aplikacije je složena tako da raščlani aplikaciju na manje dijelove koji bi u budućnosti bili lakši za održavanje te kako bi se komponente mogle ekstraktirati i ponovno iskoristiti.
+S obzirom da ova je aplikacija primjer online trgovine dovoljan je tradicionalni Monolit. Međutim,gledano u budućnost, odvajanjem komponenti i njihovih stilova unutar shared foldera, iste se mogu ekstraktirati u zaseban library koji bi se mogao koristiti u drugim projektima. Nastavno na to, nije isključiva ni opcija prebacivanja Monolita u MikroFrontend arhitekturu, gdje bi se primjerice aplikacija razdvojila na module kao što su Prikaz proizvoda, košarica, korisnički profil, platni sustav itd... U slučaju da nije nužno koristiti različite tehnologije te ako jedan tim radi na kompletnoj aplikaciji dovoljno je prebaciti Monolit u Monorepo (npr. Nx alat). Monorepo omogućava lakši razvoj jer se sve nalazi u jednom repozitoriju iako su svi moduli odvojeni i moguće ih je zasebno testirati i deployat.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Trenutna struktura aplikacije se dijeli na:
+
+- pages: glavne stranice aplikacije gdje svaka predstavlja svoju rutu (Main, Login, Profil, Košarica itd..)
+- components: komponente koje se koriste u projektu
+- - shared: komponente koje se mogu koristiti na više mjesta u projektu, ne smiju sadržavati poslovnu logiku
+-services: servisi zaduženi za nekakvu logiku kao što je npr. autentikacija ili komunikacija s backendom
+- styles: potencijalni globalni stilovi za aplikaciju
 
 ### `npm test`
 
