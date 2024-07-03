@@ -41,7 +41,7 @@ Prikaz strukture:
 
 
 
-Za dizajn komponenti sam koristio Bootstrap te sam neke od komponenti prebacio u zasebne wrapper komponente kako bi se mogle dodatno stilizirati i prilagoditi potrebama projekta. Iz tog razloga komponente koje se mogu ponovno koristiti imaju prefix King.
+Za dizajn komponenti sam koristio Bootstrap bibilioteku te sam neke od komponenti prebacio u zasebne wrapper komponente kako bi se mogle dodatno stilizirati i prilagoditi potrebama projekta. Iz tog razloga komponente koje se mogu ponovno koristiti imaju prefix King.
 Osobno smatram da, ukoliko projekt iziskuje visoku jedinstvenost dizajna, ne bi trebali koristiti biblioteke kao što su Bootstrap, MaterialUI jer nisu namjenjeni "overridanju" stilova te dolazi vrlo lako do konflikta u stilovima. U tom slučaju bi trebalo komponente raditi iz početka te kreirati vlastiti dizajn sistem.
 
 Aplikacija vizualno izgleda ovako:
