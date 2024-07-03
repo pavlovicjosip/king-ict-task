@@ -42,7 +42,7 @@ Prikaz strukture:
 
 
 Za dizajn komponenti sam koristio Bootstrap bibilioteku te sam neke od komponenti prebacio u zasebne wrapper komponente kako bi se mogle dodatno stilizirati i prilagoditi potrebama projekta. Iz tog razloga komponente koje se mogu ponovno koristiti imaju prefix King.
-Osobno smatram da, ukoliko projekt iziskuje visoku jedinstvenost dizajna, ne bi trebali koristiti biblioteke kao što su Bootstrap, MaterialUI jer nisu namjenjeni "overridanju" stilova te dolazi vrlo lako do konflikta u stilovima. U tom slučaju bi trebalo komponente raditi ispočetka te kreirati vlastiti dizajn sistem.
+Osobno smatram da, ukoliko projekt iziskuje visoku jedinstvenost dizajna, ne bi trebali koristiti biblioteke kao što su Bootstrap, MaterialUI jer nisu namjenjeni "overridanju" stilova te dolazi vrlo lako do konflikta u stilovima. U tom slučaju bi trebalo komponente raditi ispočetka te kreirati vlastiti dizajn sistem, no naravno, za to je potrebna veća količina vremena.
 
 Aplikacija vizualno izgleda ovako:
 - prikaz shopa koji sadrži kontrole te prikaz produkta. Svaki produkt je ista komponenta kartice koja se prilagođava podatcima. Svaka kartica ima dodavanje u košaricu, odabir količine, gumb detalji za prikaz detalja, prikaz ocjene te cijena.
