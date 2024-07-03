@@ -1,8 +1,6 @@
 import './Main.scss';
 import React, { useState } from 'react';
 
-import { Container } from 'react-bootstrap';
-
 import Shop from '../../features/shop/Shop';
 import Navigation from '../../features/navigation/Navigation';
 
