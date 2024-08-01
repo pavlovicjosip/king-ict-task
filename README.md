@@ -17,19 +17,19 @@ Projekt je kreiran pomoću Create React App (https://github.com/facebook/create-
 
 
 >[!WARNING]
->Za neke riječi u dokumentaciji koristim engleski jezik jer nemaju adekvatan prijevod. Kod je pisan s engleskim nazivima varijabli,metoda iz razloga što je to bolja praksa radi održavanja i konvencije programiranja.
+>Za neke riječi u dokumentaciji koristim engleski jezik jer nemaju adekvatan prijevod. Kod je pisan s engleskim nazivima varijabli, metoda iz razloga što je to bolja praksa radi održavanja i konvencije programiranja.
 >UI aplikacije je postavljen na hrvatski jezik isključivo iz razloga što se prijavljujem u firmu koja radi s hrvatskim produktima. 
 >Vrlo lako se može dodati i višejezičnost ukoliko je potrebno te to možemo raspraviti.
 
 Arhitektura aplikacije je složena tako da raščlani aplikaciju na manje dijelove koji bi u budućnosti bili lakši za održavanje te kako bi se komponente mogle ekstraktirati i ponovno iskoristiti.
-S obzirom da ova je aplikacija primjer online trgovine u ovom trenutku je dovoljan tradicionalni Monolit. Međutim, gledano u budućnost, odvajanjem komponenti i njihovih stilova unutar shared foldera, iste se mogu ekstraktirati u zasebnu biblioteku koja bi se mogla koristiti u drugim projektima. Nastavno na to, nije isključiva ni opcija prebacivanja Monolita u MikroFrontend arhitekturu, gdje bi se primjerice aplikacija razdvojila na module kao što su Prikaz proizvoda, košarica, korisnički profil, platni sustav itd... U slučaju da nije nužno koristiti različite tehnologije te ako jedan tim radi na kompletnoj aplikaciji dovoljno bi bilo prebaciti Monolit u Monorepo (npr. jedan od alata koji to rade je Nx ). Monorepo omogućava lakši razvoj jer se sve nalazi u jednom repozitoriju iako su svi moduli odvojeni i moguće ih je zasebno testirati i deployat.
+S obzirom da ova je aplikacija primjer online trgovine u ovom trenutku je dovoljan tradicionalni Monolit. Međutim, gledano u budućnost, odvajanjem komponenti i njihovih stilova unutar shared foldera, iste se mogu ekstraktirati u zasebnu biblioteku koja bi se mogla koristiti u drugim projektima. Nastavno na to, nije isključiva ni opcija prebacivanja Monolita u MikroFrontend arhitekturu, gdje bi se primjerice aplikacija razdvojila na module kao što su Prikaz proizvoda, košarica, korisnički profil, platni sustav itd... U slučaju da nije nužno koristiti različite tehnologije te ako jedan tim radi na kompletnoj aplikaciji dovoljno bi bilo prebaciti Monolit u Monorepo (npr. jedan od alata koji to rade je Nx). Monorepo omogućava lakši razvoj jer se sve nalazi u jednom repozitoriju iako su svi moduli odvojeni i moguće ih je zasebno testirati i deployat.
 
 Trenutna struktura aplikacije se dijeli na:
 
 - pages: glavne stranice aplikacije gdje svaka predstavlja svoju rutu (Main, Login, Profil, Košarica itd..)
 - components: komponente koje se koriste u projektu
-- - shared: komponente koje se mogu koristiti na više mjesta u projektu, ne smiju sadržavati poslovnu logiku
--services: servisi zaduženi za nekakvu logiku kao što je npr. autentikacija ili komunikacija s backendom
+-- shared: komponente koje se mogu koristiti na više mjesta u projektu, ne smiju sadržavati poslovnu logiku
+- services: servisi zaduženi za nekakvu logiku kao što je npr. autentikacija ili komunikacija s backendom
 - styles: potencijalni globalni stilovi za aplikaciju
 
 
@@ -42,7 +42,7 @@ Prikaz strukture:
 
 
 Za dizajn komponenti sam koristio Bootstrap bibilioteku te sam neke od komponenti prebacio u zasebne wrapper komponente kako bi se mogle dodatno stilizirati i prilagoditi potrebama projekta. Iz tog razloga komponente koje se mogu ponovno koristiti imaju prefix King.
-Osobno smatram da, ukoliko projekt iziskuje visoku jedinstvenost dizajna, ne bi trebali koristiti biblioteke kao što su Bootstrap, MaterialUI jer nisu namjenjeni "overridanju" stilova te dolazi vrlo lako do konflikta u stilovima. U tom slučaju bi trebalo komponente raditi iz početka te kreirati vlastiti dizajn sistem.
+Osobno smatram da, ukoliko projekt iziskuje visoku jedinstvenost dizajna, ne bi trebali koristiti biblioteke kao što su Bootstrap, MaterialUI jer nisu namjenjeni "overridanju" stilova te dolazi vrlo lako do konflikta u stilovima. U tom slučaju bi trebalo komponente raditi ispočetka te kreirati vlastiti dizajn sistem, no naravno, za to je potrebna veća količina vremena.
 
 Aplikacija vizualno izgleda ovako:
 - prikaz shopa koji sadrži kontrole te prikaz produkta. Svaki produkt je ista komponenta kartice koja se prilagođava podatcima. Svaka kartica ima dodavanje u košaricu, odabir količine, gumb detalji za prikaz detalja, prikaz ocjene te cijena.
@@ -103,7 +103,7 @@ const Product{
 Neke od mjera koje bi trebali koristiti su:
 
 - Instaliranje SSL/TLS certifikata na serveru kako bi se koristio HTTPS umjesto HTTP-a.
-- Enkripcija osjetljivih podataka u bazi podataka, moguće je koristiti neke od algoritama kao što su AES itd..
+- Enkripcija osjetljivih podataka u bazi podataka, moguće je koristiti neke od algoritama kao što su AES itd...
 - Lozinke bi uvijek trebale biti hashirane unutar baze umjesto spremane kao tekst. Ako je potrebno uz hashiranje se koristi i "salt" za dodatnu sigurnost.
 - Unutar aplikacije je potrebno postaviti zaštitu na rute koje ne želimo prikazati anonimnim korisnicima. U Angularu se za to koriste "Guardovi", dok u Reactu je moguće napraviti wrapper kao što je ProtectedRoute kojeg možete vidjeti u projektu pod servisima.
 - Za prijavu korisnika je dobro koristiti JWT token kojeg sam i koristio unutar aplikacije, implementacija je u servisima. Bolja stvar od trenutne implementacije s lokalnom memorijom bi bila korištenje kolačića jer su manje ranjivi od XSS napada.
@@ -118,13 +118,13 @@ U ovom trenutku postoji više tehnologija koje omogućavaju proces naseljavanja 
 
 1. Commit promjena na repozitorij kao što je Github.
 2. Okidanje CI pipelinea na commitu gdje se povlače nove promjene.
-3. Instaliranje ovisnosti unutar projekta (dependecies) , pokreće se ```npm install```
-4. Pokretanje UNIT testova (Za nastavak koraka svi testovi bi trebali proći)
+3. Instaliranje ovisnosti unutar projekta (dependecies), pokreće se ```npm install```
+4. Pokretanje UNIT testova (za nastavak koraka svi testovi bi trebali proći)
 5. Build aplikacije, pokreće se ```npm build``` koji pakira aplikaciju i stvara verziju koja je spremna za naseljavanje.
 6. Naseljavanje na testne servere gdje postoje dodatna testiranja van aplikacije.
 7. Naseljavanje na produkciju ili dedicirani server.
 
-U slučaju Githuba, ovi koraci se mogu definirati unutat Github Actionsa tj.github yml datoteke. Primjer je slika ispod koja je preuzeta s docs.github.com
+U slučaju Githuba, ovi koraci se mogu definirati unutat Github Actionsa tj. github yml datoteke. Primjer je slika ispod koja je preuzeta s docs.github.com
 
 ![image](https://github.com/pavlovicjosip/king-ict-task/assets/26819142/b8241fa8-900f-4f21-8432-4bd29afa72e2)
 
