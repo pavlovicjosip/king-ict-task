@@ -1,46 +1,48 @@
-name: CI/CD Pipeline
+import './Login.scss';
+import React, { useState } from 'react';
+import { Form, Button, Container, Row, Col, Alert } from 'react-bootstrap';
+import { useAuth } from '../../services/AuthContext';
+import logo from '../../../assets/logos/logo.png';
 
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+const Login = () => {
+	const [username, setUsername] = useState('');
+	const [password, setPassword] = useState('');
+	const { login, error } = useAuth();
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
+	const handleSubmit = (e) => {
+		e.preventDefault();
+		login(username, password);
+	};
 
-    steps:
-    - name: Checkout koda
-      uses: actions/checkout@v1
+	return (
+		<Container className="login-window">
+			<Row className="login">
+				<Col className="justify" md={5}>
+					<img className="login-logo" src={logo} alt="logo" />
 
-    - name: Instalacija Node.js
-      uses: actions/setup-node@v1
-      with:
-        node-version: '14'
+					{error && <Alert variant="danger">{error}</Alert>}
+					<Form onSubmit={handleSubmit} className="login-form">
+						<Form.Group className="justify" controlId="formUsername">
+							<Form.Label>Korisničko ime</Form.Label>
+							<Form.Control type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
+						</Form.Group>
 
-    - name: Instaliranje dependency-a
-      run: npm install
+						<Form.Group className="justify" controlId="formPassword">
+							<Form.Label>Lozinka</Form.Label>
+							<Form.Control type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+						</Form.Group>
 
-    - name: Pokretanje tes
-      run: npm test
+						<Button variant="danger" type="submit">
+							Prijava
+						</Button>
+						<a className="login-anonymous-link" href="/">
+							Nastavi kao anonimni korisnik
+						</a>
+					</Form>
+				</Col>
+			</Row>
+		</Container>
+	);
+};
 
-    - name: Build application
-      run: npm run build
-
-    - name: Deploy to staging
-      if: github.ref == 'refs/heads/main'
-      run: |
-	scp - r build
-				
-	
-	
-	/* user@staging-server:/var/www/html/
-
-    - name: Deploy to production
-      if: github.ref == 'refs/heads/main' && github.event_name == 'release'
-      run: |
-        # Komanda za deployment na produkcioni server
-        scp -r build/* user@production-server:/var/www/html/
+export default Login;
